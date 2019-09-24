@@ -3,26 +3,28 @@ const router = express.Router();
 const bodyParser = require('body-parser');
 const MongoClient = require('mongodb').MongoClient;
 const config = require('dotenv').config();
-const DB_URL = process.env.DB_URL;
-const DB_PORT = process.env.DB_PORT;
+const path = require('path');
+const routeConfig = require(path.resolve(__dirname, '../../config', 'routeConfig.js'));
+const connectionUrl = `${routeConfig.DB_HOST}${routeConfig.DB_URL}:${routeConfig.DB_PORT}`;
 
 router.use(bodyParser.urlencoded({extended: true}));
 
 router.post('/login', (req, res)=>{
-    let dbName = process.env.DB_NAME,
-        collectionName = 'customers',
-        connectionUrl = `mongodb://${DB_URL}:${DB_PORT}`;
+    let collectionName = 'customers';
     const client = new MongoClient(connectionUrl, {useUnifiedTopology: true});
     client.connect((err, client)=>{
         if(err !== null){
-            res.status(500).json({msg: 'Cannot connect to database'});
+            res.status(500).json({err: 'Cannot connect to database'});
         }
-        const db = client.db(dbName);
-        db.collection(collectionName).findOne({username: 'sneakerManiac123'}, (err, data)=>{
+        const db = client.db(routeConfig.DB_NAME);
+        db.collection(collectionName).findOne({username: req.body.username}, (err, data)=>{
             if(err !== null){
-                res.status(500).json({msg: 'Record not found'});
+                res.status(500).json({err: 'Error fetching record'});
             }
             client.close();
+            if(data === null){
+                res.status(400).json({msg: 'User not found'});
+            }
             res.status(202).json(data);
         });
     });

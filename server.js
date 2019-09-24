@@ -8,9 +8,9 @@ const authRouter = require(path.resolve(__dirname, 'routes', 'login', 'login.js'
 
 app.use(cors());
 
-// app.get('/', (req, res)=>{
-//     res.status(200).json({msg: 'Routing to login authentication view...'});
-// });
+app.get('/', (req, res)=>{
+    res.status(200).json({msg: 'Routing to login authentication view...'});
+});
 
 app.use(authRouter);
 

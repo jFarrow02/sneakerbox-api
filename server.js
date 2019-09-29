@@ -7,13 +7,14 @@ const cors = require('cors');
 const authRouter = require(path.resolve(__dirname, 'routes', 'auth', 'index.js'));
 
 app.use(cors());
+app.use(authRouter.login);
+app.use(authRouter.signup);
 
 app.get('/', (req, res)=>{
     res.status(200).json({msg: 'Routing to login authentication view...'});
 });
 
-app.use(authRouter.login);
-app.use(authRouter.signup);
+
 
 http.createServer(app).listen(PORT, ()=>{
     console.log(`App listening on port ${PORT}; env=${process.env.NODE_ENV}`);

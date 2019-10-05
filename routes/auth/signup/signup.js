@@ -19,34 +19,38 @@ router.post('/signup', (req, res)=>{
         password = req.body.password;
 
     bcrypt.hash(password, saltRounds).then((hash)=>{
-        //Check for user before saving to DB
+        
         const client = new MongoClient(routeConfig.CONNECTION_URL, {useNewUrlParser: true, useUnifiedTopology: true});
         client.connect((err, client)=>{
+            //Handle connection errors to the DB
             if(err !== null){
                 helpers.log(err.message);
                 res.status(500).json({err: 'Server error occurred'});
                 return;
             }
             const db = client.db(routeConfig.DB_NAME);
+            //Check for user before saving to DB
             db.collection('customers').findOne({username: username})
                 .then((result)=>{
                     if(result !== null){
                         res.status(400).json({err: `User ${username} already exists`});
                         return;
                     }
+                    //If user does not already exist, create user
                     db.collection('customers').insertOne({username: username, password: hash})
                     .then(()=>{
                         res.status(202).json({msg: `Created user ${username}`});
                         return;
                     });
             });
+            client.close();
         });
     })
     .catch((err)=>{
         helpers.log(err.message);
         res.status(500).json({err: 'Error connecting to db'});
         return;
-    })
+    });
 });
 
 module.exports = router;

@@ -51,7 +51,7 @@ router.post('/login', (req, res)=>{
                     }
                 })
                 .catch((err)=>{
-                   res.status(500).json({err: 'Error validating user'})
+                   res.status(500).json({err: err})
                 })
             })
             .catch((err)=>{

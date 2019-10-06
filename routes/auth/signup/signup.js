@@ -8,6 +8,7 @@ const routeConfig = require(path.resolve(__dirname, '../../config', 'routeConfig
 const saltRounds = 10;
 const helpers = require(path.resolve(path.resolve(__dirname, '../../../services/utils', 'helpers.js')));
 
+router.use(bodyParser.urlencoded({extended: true}));
 router.use(bodyParser.json());
 
 router.post('/signup', (req, res)=>{
@@ -43,8 +44,8 @@ router.post('/signup', (req, res)=>{
                         return;
                     });
             });
-            client.close();
         });
+        client.close();
     })
     .catch((err)=>{
         helpers.log(err.message);

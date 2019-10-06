@@ -7,7 +7,8 @@ const secret = process.env.SECRET;
 router.use(bodyParser.json());
 
 router.get('/myaccount', (req, res)=>{
-    let token = req.params.token;
+    //Get auth token from 'Authorization' header
+    let token = req.get('Authorization');
     if(!token){
         res.status(400).json({err: 'Token not found'});
     }

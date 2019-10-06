@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const MongoClient = require('mongodb').MongoClient;
 const path = require('path');
 const routeConfig = require(path.resolve(__dirname, '../../config', 'routeConfig.js'));
+const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const secret = process.env.SECRET;
 router.use(bodyParser.urlencoded({extended: true}));
@@ -25,8 +26,14 @@ router.post('/login', (req, res)=>{
                     res.status(400).json({msg: 'User not found'});
                     return;
                 }
-                //Issue JWT:
-                let header = {algorithm: process.env.ALG, expiresIn: '24h', issuer: 'sneakerbox-authserver'},
+                console.log(data);
+                //Verify user password
+                bcrypt.compare(req.body.password, data.password)
+                .then((result)=>{
+                    //Issue JWT if password match
+                })
+                .catch((err)=>{
+                    let header = {algorithm: process.env.ALG, expiresIn: '24h', issuer: 'sneakerbox-authserver'},
                     payload = {username: req.body.username};
                     jwt.sign(payload, secret, header, ((err, token)=>{
                         if(err){
@@ -36,6 +43,7 @@ router.post('/login', (req, res)=>{
                         res.status(202).json({token: token});
                         return;
                     }));
+                })
             })
             .catch((err)=>{
                 res.status(500).json({err: 'Error fetching record'});

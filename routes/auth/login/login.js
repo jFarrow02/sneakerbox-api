@@ -26,23 +26,32 @@ router.post('/login', (req, res)=>{
                     res.status(400).json({msg: 'User not found'});
                     return;
                 }
-                console.log(data);
                 //Verify user password
                 bcrypt.compare(req.body.password, data.password)
                 .then((result)=>{
                     //Issue JWT if password match
+                
+                    //If MATCH:
+                    if(result){
+                        let header = {algorithm: process.env.ALG, expiresIn: '24h', issuer: 'sneakerbox-authserver'},
+                        payload = {username: req.body.username};
+                        jwt.sign(payload, secret, header, ((err, token)=>{
+                            if(err){
+                                res.status(500).json({err: 'Authentication failed'});
+                                return;
+                            }
+                            res.status(202).json({token: token});
+                            return;
+                        }));
+                    }
+                    //If NO MATCH:
+                    else{
+                        res.status(404).json({err: 'Invalid username/password combination'});
+                        return;
+                    }
                 })
                 .catch((err)=>{
-                    let header = {algorithm: process.env.ALG, expiresIn: '24h', issuer: 'sneakerbox-authserver'},
-                    payload = {username: req.body.username};
-                    jwt.sign(payload, secret, header, ((err, token)=>{
-                        if(err){
-                            res.status(500).json({err: 'Authentication failed'});
-                            return;
-                        }
-                        res.status(202).json({token: token});
-                        return;
-                    }));
+                   res.status(500).json({err: 'Error validating user'})
                 })
             })
             .catch((err)=>{

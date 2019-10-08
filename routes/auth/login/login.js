@@ -7,6 +7,8 @@ const routeConfig = require(path.resolve(__dirname, '../../config', 'routeConfig
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const secret = process.env.SECRET;
+
+router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({extended: true}));
 
 router.post('/login', (req, res)=>{
@@ -16,7 +18,6 @@ router.post('/login', (req, res)=>{
         //Handle errors connecting to database
         if(err !== null){
             res.status(500).json({err: 'Cannot connect to database'});
-            return;
         }
         const db = client.db(routeConfig.DB_NAME);
         //Search for user in database
@@ -24,7 +25,6 @@ router.post('/login', (req, res)=>{
             .then((data)=>{
                 if(data === null){
                     res.status(400).json({msg: 'User not found'});
-                    return;
                 }
                 //Verify user password
                 bcrypt.compare(req.body.password, data.password)
@@ -38,16 +38,14 @@ router.post('/login', (req, res)=>{
                         jwt.sign(payload, secret, header, ((err, token)=>{
                             if(err){
                                 res.status(500).json({err: 'Authentication failed'});
-                                return;
                             }
-                            res.status(202).json({token: token});
-                            return;
+                            //Issue JWT
+                            res.status(202).json({token: token, currentUser: req.body.username});
                         }));
                     }
                     //If NO MATCH:
                     else{
                         res.status(404).json({err: 'Invalid username/password combination'});
-                        return;
                     }
                 })
                 .catch((err)=>{
@@ -56,10 +54,9 @@ router.post('/login', (req, res)=>{
             })
             .catch((err)=>{
                 res.status(500).json({err: 'Error fetching record'});
-                return;
             })
-        client.close();
     });
+    client.close();
 });
 
 module.exports = router;

@@ -13,6 +13,7 @@ router.use(bodyParser.json());
 
 router.post('/signup', (req, res)=>{
 
+    console.log('Auth', req.get('Authorization'));
     /**
      * TODO: Create user input validation for request params
      */
@@ -27,6 +28,7 @@ router.post('/signup', (req, res)=>{
             if(err !== null){
                 helpers.log(err.message);
                 res.status(500).json({err: 'Server error occurred'});
+                return;
             }
             const db = client.db(routeConfig.DB_NAME);
             //Check for user before saving to DB
@@ -34,12 +36,18 @@ router.post('/signup', (req, res)=>{
                 .then((result)=>{
                     if(result !== null){
                         res.status(400).json({err: `User ${username} already exists`});
+                        return;
                     }
                     //If user does not already exist, create user
                     db.collection('customers').insertOne({username: username, password: hash})
                     .then(()=>{
                         res.status(202).json({msg: `Created user ${username}`});
-                    });
+                        return;
+                    })
+                    .catch((err)=>{
+                        res.status(500).json({err: 'Foo'});
+                        return;
+                    })
             });
         });
         client.close();
@@ -47,6 +55,7 @@ router.post('/signup', (req, res)=>{
     .catch((err)=>{
         helpers.log(err.message);
         res.status(500).json({err: 'Error connecting to db'});
+        return;
     });
 });
 

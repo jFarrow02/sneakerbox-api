@@ -14,6 +14,8 @@ const authRouter = require(path.resolve(__dirname, 'routes', 'auth', 'index.js')
 const pagesRouter = require(path.resolve(__dirname, 'routes', 'pages', 'index.js'));
 const routeConfig = require(path.resolve(__dirname, 'routes', 'config', 'routeConfig.js'));
 const connString = routeConfig.CONNECTION_URL;
+const MongoClient = require('mongodb').MongoClient;
+const client = new MongoClient(connString, {useNewUrlParser: true, useUnifiedTopology: true});
 const mongo = require(path.resolve(__dirname, 'db'));
 const connect = mongo.connect;
 app.use(cors());
@@ -22,53 +24,21 @@ app.use(authRouter.signup);
 app.use(pagesRouter.acct);
 
 /**
- * DB helper function. Returns a Promise object that resolves with a {MongoClient} instance
- * on success, or an {Error} instance on failure.
- * @param {String} url 
- * @param {Function} connect 
- * @return {Promise}
- */
-// function _db_getConnection(url, connect){
-//     connect(url)
-//         .then((connection)=>{
-//             return connection;
-//         })
-//         .catch((err)=>{
-//             return new Error('Failed to connect to db');
-//         })
-// }
-function _db_getConnection(url, connect){
-    return new Promise((resolve, reject)=>{
-        try{
-            let client = connect(url);
-            resolve(client);
-        }
-        catch(err){
-            reject(new Error('Failed to connect to db'));
-            //resolve(new Error('Failed to connect to db'));
-        }
-    });
-}
-
-/**
  * Route handler function for GET '/' route
  * @param {Request} req Express {Request} instance
  * @param {Response} res Express {Response} instance
+ * @param {Function} connectFunc
+ * @param {MongoClient} client
  */
-async function getIndexHandler(req, res){
-    //let connection = await _db_getConnection(null, connect);  //connection is the result of a function that returns a Promise
-    // console.log(connection);
-    // if(connection instanceof Error){
-    //     res.status(500).json({err: connection.message});
-    //     return;
-    // }
+async function getIndexHandler(req, res, connectFunc, client){
     let connection;
     try{
-        connection = await _db_getConnection(null, connect);
+        connection = await connectFunc(client);
         res.status(200).json({msg: 'Connected to db'});
         return;
     }
     catch(err){
+        // res.status(500).json({err: 'failed to connect to db'});
         res.status(500).json({err: err.message});
         return;
     }
@@ -76,7 +46,7 @@ async function getIndexHandler(req, res){
 }
 
 app.get('/', (req, res)=>{
-    getIndexHandler(req, res);
+    getIndexHandler(req, res, connect, client);
 });
 
 http.createServer(app).listen(PORT, ()=>{

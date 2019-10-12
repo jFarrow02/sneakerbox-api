@@ -6,9 +6,9 @@
   "scripts": {
     "dev": "set NODE_ENV=dev&& nodemon server.js",
     "dev-mac": "NODE_ENV=dev nodemon server.js",
-    "prod": "set NODE_ENV=prod && node server.js",
+    "prod": "set NODE_ENV=prod&& node server.js",
     "prod-mac": "NODE_ENV=prod node server.js",
-    "test": "set NODE_ENV=test&& cross-env CI=true jest"
+    "test": "set NODE_ENV=test&& jest"
   },
   "husky":{
     "hooks": {

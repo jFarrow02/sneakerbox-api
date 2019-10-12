@@ -10,7 +10,7 @@
     "prod-mac": "NODE_ENV=prod node server.js",
     "test": "set NODE_ENV=test&& jest"
   },
-  "husky":{
+  "husky": {
     "hooks": {
       "pre-commit": "npm test",
       "pre-push": "npm test"

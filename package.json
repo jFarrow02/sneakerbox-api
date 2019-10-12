@@ -15,7 +15,7 @@
       "pre-commit": "npm test",
       "pre-push": "npm test"
     }
-  }
+  },
   "author": "jFarrow02",
   "license": "ISC",
   "dependencies": {

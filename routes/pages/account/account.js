@@ -11,4 +11,8 @@ router.get('/myaccount', checkAuthentication, (req, res)=>{
     res.status(200).json({msg: 'Token found'});
 });
 
+router.get('/testroute', (req, res)=>{
+    res.status(200).json({msg: 'test route ok'});
+})
+
 module.exports = router; 

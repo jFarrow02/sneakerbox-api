@@ -51,7 +51,10 @@ async function getIndexHandler(req, res, dao, client){
 
 app.get('/', (req, res)=>{
    getIndexHandler(req, res, DAO, client);
-   
+});
+
+app.get('/testroute', (req, res)=>{
+    res.status(200).json({msg: 'Found a test route OK'});
 });
 
 http.createServer(app).listen(PORT, ()=>{

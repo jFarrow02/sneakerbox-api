@@ -8,7 +8,7 @@
     "dev-mac": "NODE_ENV=dev nodemon server.js",
     "prod": "set NODE_ENV=prod && node server.js",
     "prod-mac": "NODE_ENV=prod node server.js",
-    "test": "set NODE_ENV=test"
+    "test": "set NODE_ENV=test&& jest"
   },
   "author": "jFarrow02",
   "license": "ISC",
@@ -22,6 +22,8 @@
     "mongodb": "^3.3.2"
   },
   "devDependencies": {
-    "nodemon": "^1.19.2"
+    "jest": "^24.9.0",
+    "nodemon": "^1.19.2",
+    "supertest": "^4.0.2"
   }
 }

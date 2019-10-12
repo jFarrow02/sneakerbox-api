@@ -3,7 +3,7 @@ const secret = process.env.SECRET;
 
 const checkAuthentication = (req, res, next)=>{
     let token = req.get('Authorization');
-    console.log('TOKEN:', token);
+    
     jwt.verify(token, secret, (err, payload)=>{
         if(err){
             console.log(err);

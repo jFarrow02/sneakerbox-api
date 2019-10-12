@@ -16,8 +16,10 @@ const routeConfig = require(path.resolve(__dirname, 'routes', 'config', 'routeCo
 const connString = routeConfig.CONNECTION_URL;
 const MongoClient = require('mongodb').MongoClient;
 const client = new MongoClient(connString, {useNewUrlParser: true, useUnifiedTopology: true});
-const mongo = require(path.resolve(__dirname, 'db'));
-const connect = mongo.connect;
+const mongo = require(path.resolve(__dirname, 'services', 'db'));
+const DAO = {...mongo};
+
+//Mount routers & middleware
 app.use(cors());
 app.use(authRouter.login);
 app.use(authRouter.signup);
@@ -27,26 +29,29 @@ app.use(pagesRouter.acct);
  * Route handler function for GET '/' route
  * @param {Request} req Express {Request} instance
  * @param {Response} res Express {Response} instance
- * @param {Function} connectFunc
+ * @param {function} connectFunc Handler function for connecting to DB. Throws an Error if unable to connect.
  * @param {MongoClient} client
  */
-async function getIndexHandler(req, res, connectFunc, client){
-    let connection;
+async function getIndexHandler(req, res, dao, client){
     try{
-        connection = await connectFunc(client);
-        res.status(200).json({msg: 'Connected to db'});
+        let connection = await dao.connect(client);
+        console.log('connected to db');
+
+        //Close db connection
+        let closed = await dao.close(client);
+        res.status(200).json({msg: 'Connection to db was closed'});
         return;
     }
     catch(err){
-        // res.status(500).json({err: 'failed to connect to db'});
+        // res.status(500).json({err: 'Failed to connect to db'});
         res.status(500).json({err: err.message});
         return;
     }
-    
 }
 
 app.get('/', (req, res)=>{
-    getIndexHandler(req, res, connect, client);
+   getIndexHandler(req, res, DAO, client);
+   
 });
 
 http.createServer(app).listen(PORT, ()=>{

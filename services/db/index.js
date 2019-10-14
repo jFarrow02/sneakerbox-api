@@ -1,3 +1,3 @@
-const dao = require('./dao');
+const dbConnectorService = require('./dbConnectorService');
 
-module.exports = dao;
+module.exports = dbConnectorService;

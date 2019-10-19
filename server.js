@@ -11,6 +11,7 @@ const nodeEnvConfig = {
 const PORT = nodeEnvConfig[process.env.NODE_ENV];
 const cors = require('cors');
 const authRouter = require(path.resolve(__dirname, 'routes', 'auth', 'index.js'));
+const categoryRouter = require(path.resolve(__dirname, 'routes', 'categories', 'index.js'));
 const homeRouter = require(path.resolve(__dirname, 'routes', 'home', 'index.js'));
 const pagesRouter = require(path.resolve(__dirname, 'routes', 'pages', 'index.js'));
 
@@ -20,6 +21,7 @@ app.use(authRouter.login);
 app.use(authRouter.signup);
 app.use(pagesRouter.acct);
 app.use(homeRouter.home);
+app.use(categoryRouter.categories);
 
 
 http.createServer(app).listen(PORT, ()=>{

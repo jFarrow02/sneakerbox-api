@@ -38,6 +38,7 @@ const close = async function (client){
  * @param {Collection} collection Mongo {Collection} object instance
  * @param {Object} query Object representing db query
  * @returns {Promise} Promise object representing eventual completion of 'findOne' db operation
+ * @throws {Error}
  */
 const findOne = async function (db, collection, query){
     let found = await db[collection].findOne(query);
@@ -53,12 +54,10 @@ const findOne = async function (db, collection, query){
     }
 }
 
-const dbConnectorService = ()=>{return (
-    {
-        close       :       close,
-        connect     :       connect,
-        //findOne     :       findOne,
-    }
-)};
+const dbConnectorService = {
+    close       :       close,
+    connect     :       connect,
+    findOne     :       findOne,
+};
 
 module.exports = dbConnectorService;

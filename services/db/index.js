@@ -1,3 +1,7 @@
 const dbConnectorService = require('./dbConnectorService');
+const collections = require('./collections');
 
-module.exports = dbConnectorService;
+module.exports = {
+    collections         :   collections,
+    dbConnectorService  :   dbConnectorService,
+};

@@ -5,8 +5,8 @@ const routeConfig = require(path.resolve('/sneakerbox',  'routes', 'config', 'ro
 const connString = routeConfig.CONNECTION_URL;
 const MongoClient = require('mongodb').MongoClient;
 const client = new MongoClient(connString, {useNewUrlParser: true, useUnifiedTopology: true});
-const dbConnectorService= require(path.resolve('/sneakerbox', 'services', 'db'));
-const connector = dbConnectorService();
+const connector= require(path.resolve('/sneakerbox', 'services', 'db'));
+
 
 router.connector = connector;   //Attach as property of router for easy mocking
 

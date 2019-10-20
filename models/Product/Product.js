@@ -1,7 +1,9 @@
-/**@fileoverview */
-//This file defines a 'Product' model class that represents a record in the 'products' database collection.
-//It also defines helper methods on the model for querying database records and/or
-//transforming results.
+/**
+ * @fileoverview This file defines a 'Product' model class that represents a record in the 'products' database collection.
+   It also defines helper methods on the model for querying database records and/or
+   transforming results.
+ */
+
 
 const path = require('path');
 const dbSrvc = require(path.resolve('/sneakerbox', 'services', 'db', 'index.js'));
@@ -31,7 +33,7 @@ class Product{
     constructor(productObj){
         let keys = Object.getOwnPropertyNames(productObj);
         keys.forEach((key)=>{
-            if(key !== '_id'){
+            if(key !== '_id' && key !== 'priceHistory'){
                 this[key] = productObj[key];
             }
         })

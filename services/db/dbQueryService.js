@@ -8,7 +8,7 @@
  * @param {Db} db Mongo {Db} object instance
  * @param {Collection} collection Mongo {Collection} object instance
  * @param {Object} query Object representing db query
- * @returns {Object} result Object that is result of successful database query
+ * @returns {Promise} Promise object representing completion of db query
  * @throws {Error} Throws error if query returns no results
  */
 const findOne = async function (db, collection, query){
@@ -22,7 +22,7 @@ const findOne = async function (db, collection, query){
 /**
  * @param {Db} db Mongo {Db} object instance
  * @param {Collection} collection Mongo {Collection} object instance
- * @returns {[Object]} result Object that is result of successful database query
+ * @returns {Promise} Promise object representing completion of db query
  * @throws {Error} Throws error if query returns no results
  */
 const findAll = async function (db, collection){
@@ -30,23 +30,9 @@ const findAll = async function (db, collection){
     if(result === null){
         throw new Error('No results found');
     }
-
     return result.toArray();
 }
 
-// const query = async function (){
-
-//}
-// let db = client.db(dbName);
-//         try{
-//             let result = await querySrvc.findOne(db, collections.categories, {name: categoryName});
-//             await connectorSrvc.close(client);
-//             return result;
-//         }
-//         catch(e){
-//             await connectorSrvc.close(client);
-//             return({err: e.message});
-//         }
 module.exports = {
     findOne     :   findOne,
     findAll     :   findAll,

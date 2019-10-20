@@ -33,6 +33,25 @@ class Category {
     }
 
     /**
+     * @param {MongoClient} client
+     * @param {Object} connectorSrvc
+     * @param {Object} querySrvc
+     */
+    static async findAllCategories(client, connectorSrvc, querySrvc){
+        await connectorSrvc.connect(client);
+        let db = client.db(dbName);
+        try{
+            let result = await querySrvc.findAll(db, collections.categories);
+            await connectorSrvc.close(client);
+            return result;
+        }
+        catch(e){
+            await connectorSrvc.close(client);
+            return {err: e.message};
+        }
+    }
+
+    /**
      *
      * @param {String} categoryName
      * @param {MongoClient} client

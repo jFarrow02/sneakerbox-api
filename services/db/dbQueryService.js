@@ -22,7 +22,7 @@ const findOne = async function (db, collection, query){
 /**
  * @param {Db} db Mongo {Db} object instance
  * @param {Collection} collection Mongo {Collection} object instance
- * @returns {Object} result Object that is result of successful database query
+ * @returns {[Object]} result Object that is result of successful database query
  * @throws {Error} Throws error if query returns no results
  */
 const findAll = async function (db, collection){
@@ -30,7 +30,8 @@ const findAll = async function (db, collection){
     if(result === null){
         throw new Error('No results found');
     }
-    return result;
+
+    return result.toArray();
 }
 
 // const query = async function (){

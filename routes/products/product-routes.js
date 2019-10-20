@@ -15,8 +15,10 @@ router.connector = connectorSrvc;
 router.query = querySrvc;
 
 //GET all /products
-router.get('/products', (req, res)=>{
-
+router.get('/products', async (req, res)=>{
+    let foundProducts = await Product.findAllProducts(client, router.connector, router.query);
+    console.log(foundProducts);
+    res.status(200).json({msg: 'Found some products'});
 });
 
 //GET /product by :slug

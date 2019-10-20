@@ -14,6 +14,7 @@ const authRouter = require(path.resolve(__dirname, 'routes', 'auth', 'index.js')
 const categoryRouter = require(path.resolve(__dirname, 'routes', 'categories', 'index.js'));
 const homeRouter = require(path.resolve(__dirname, 'routes', 'home', 'index.js'));
 const pagesRouter = require(path.resolve(__dirname, 'routes', 'pages', 'index.js'));
+const productsRouter = require(path.resolve(__dirname, 'routes', 'products'));
 
 //Mount routers & middleware
 app.use(cors());
@@ -22,6 +23,7 @@ app.use(authRouter.signup);
 app.use(pagesRouter.acct);
 app.use(homeRouter.home);
 app.use(categoryRouter.categories);
+app.use(productsRouter);
 
 
 http.createServer(app).listen(PORT, ()=>{

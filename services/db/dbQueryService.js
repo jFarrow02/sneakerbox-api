@@ -33,6 +33,19 @@ const findAll = async function (db, collection){
     return result;
 }
 
+// const query = async function (){
+
+//}
+// let db = client.db(dbName);
+//         try{
+//             let result = await querySrvc.findOne(db, collections.categories, {name: categoryName});
+//             await connectorSrvc.close(client);
+//             return result;
+//         }
+//         catch(e){
+//             await connectorSrvc.close(client);
+//             return({err: e.message});
+//         }
 module.exports = {
     findOne     :   findOne,
     findAll     :   findAll,

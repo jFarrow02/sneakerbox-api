@@ -7,12 +7,12 @@ const routeConfig = require(path.resolve('/sneakerbox',  'routes', 'config', 'ro
 const connString = routeConfig.CONNECTION_URL;
 const MongoClient = require('mongodb').MongoClient;
 const client = new MongoClient(connString, {useNewUrlParser: true, useUnifiedTopology: true});
-const connector= require(path.resolve('/sneakerbox', 'services', 'db'));
 
-router.get('/categories/:name', (req, res)=>{
-    //console.log(models);
-    let result = Category.findCategoryByName('foo', client);
-    res.status(200).json({msg: result});
+console.log('connString:', connString);
+
+router.get('/categories/:name', async (req, res)=>{
+    let result = await Category.findCategoryByName(req.params.name, client);
+    res.status(200).json({data: result});
 });
 
 module.exports = router;

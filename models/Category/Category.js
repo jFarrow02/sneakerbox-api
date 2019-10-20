@@ -1,8 +1,9 @@
 const path = require('path');
-const DB_CONST = require(path.resolve('/sneakerbox', 'services', 'db', 'index'));
-const connectorSrvc = DB_CONST.dbConnectorService;
-const collections = DB_CONST.collections;
-const dbName = process.env.DB_NAME;
+const dbSrvc = require(path.resolve('/sneakerbox', 'services', 'db', 'index.js'));
+const connectorSrvc = dbSrvc.dbConnectorService;
+const collections = dbSrvc.collections;
+const routeConfig = require(path.resolve('/sneakerbox', 'routes', 'config', 'routeConfig.js'));
+const dbName = routeConfig.DB_NAME;
 
 class Category {
     /**
@@ -29,26 +30,14 @@ class Category {
 
     /**
      *
-     * @param {String} name
+     * @param {String} categoryName
      * @param {MongoClient} client
      * @return {Boolean |}
      */
-    static async findCategoryByName(name, client){
-        let result,
-            db,
-            query = {name: name};
-        if(!name || !client){
-            result = {err: 'Improperly-formed query'};
-        }
-        try{
-            await connectorSrvc.connect(client);
-            db = client.db(dbName);
-            result = await connectorSrvc.findOne(db, collections.categories, query);
-            connectorSrvc.close(client);
-        }
-        catch(e){
-            result = {err: e.message}
-        }
+    static async findCategoryByName(categoryName, client){
+        await connectorSrvc.connect(client);
+        let db = client.db('sneakerbox-db');
+        let result = await connectorSrvc.findOne(db, 'categories', {name: categoryName});
         return result;
     }
 }

@@ -1,5 +1,5 @@
 /**
- * @fileOverview This file defines helper functions for database operations (connecting, CRUD, etc)
+ * @fileOverview This file defines helper functions for creating and closing database connections.
  * It exports an object whose properties are the helper functions defined.
  */
 
@@ -32,26 +32,9 @@ const close = async function (client){
     return closed;
 }
 
-/**
- *
- * @param {Db} db Mongo {Db} object instance
- * @param {Collection} collection Mongo {Collection} object instance
- * @param {Object} query Object representing db query
- * @returns
- * @throws {Error}
- */
-const findOne = async function (db, collection, query){
-    let result = await db.collection(collection).findOne(query);
-    if(result === null){
-        throw new Error('No results found');
-    }
-    return result;
-}
-
 const dbConnectorService = {
     close       :       close,
     connect     :       connect,
-    findOne     :       findOne,
 };
 
 module.exports = dbConnectorService;

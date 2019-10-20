@@ -4,7 +4,17 @@ const connectorSrvc = DB.dbConnectorService;
 const collection = DB.collections.customers;
 
 class Order{
-
+    /***SCHEMA***/
+    // _id: ObjectId,
+    // userId: ObjectId,
+    // state: String,
+    // lineItems: [Product],
+    // shippingAddress: [Object],
+    // billingAddress: [Object],
+    // subtotal: Number,
+    // salesTax: Number,
+    // shipping: Number,
+    // grandTotal: Number,
 }
 
 module.exports = Order;

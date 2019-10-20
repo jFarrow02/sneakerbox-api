@@ -1,11 +1,13 @@
 const path = require('path');
 const dbSrvc = require(path.resolve('/sneakerbox', 'services', 'db', 'index.js'));
 const connectorSrvc = dbSrvc.dbConnectorService;
+const querySrvc = dbSrvc.dbQueryService;
 const collections = dbSrvc.collections;
 const routeConfig = require(path.resolve('/sneakerbox', 'routes', 'config', 'routeConfig.js'));
 const dbName = routeConfig.DB_NAME;
 
 class Category {
+    /***SCHEMA***/
      //_id: ObjectId
      //slug: String
      //name: String
@@ -35,9 +37,9 @@ class Category {
      */
     static async findCategoryByName(categoryName, client){
         await connectorSrvc.connect(client);
-        let db = client.db('sneakerbox-db');
+        let db = client.db(dbName);
         try{
-            let result = await connectorSrvc.findOne(db, 'categories', {name: categoryName});
+            let result = await querySrvc.findOne(db, collections.categories, {name: categoryName});
             return result;
         }
         catch(e){

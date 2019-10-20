@@ -5,6 +5,18 @@ const collection = DB.collections.customers;
 
 class Review{
 
+    /***SCHEMA***/
+    // _id: ObjectId,
+    // productId: ObjectId,
+    // date: Date,
+    // title: String,
+    // text: String,
+    // rating: Number,
+    // userId: ObjectId,
+    // username: String,
+    // upvotes: Number,
+    // downvotes: Number,
+    // voterIds: [ObjectId],
 }
 
 module.exports = Review;

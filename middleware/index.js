@@ -6,7 +6,6 @@ const checkAuthentication = (req, res, next)=>{
     
     jwt.verify(token, secret, (err, payload)=>{
         if(err){
-            console.log(err);
             res.status(401).json({err: 'Forbidden'});
             return;
         }

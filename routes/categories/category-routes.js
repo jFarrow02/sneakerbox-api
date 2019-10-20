@@ -8,11 +8,15 @@ const connString = routeConfig.CONNECTION_URL;
 const MongoClient = require('mongodb').MongoClient;
 const client = new MongoClient(connString, {useNewUrlParser: true, useUnifiedTopology: true});
 
-console.log('connString:', connString);
-
 router.get('/categories/:name', async (req, res)=>{
     let result = await Category.findCategoryByName(req.params.name, client);
-    res.status(200).json({data: result});
+    if(!result.err){
+        let category = new Category(result);
+        res.status(200).json({data: category});
+    }
+    else{
+        res.status(400).json(result);
+    }
 });
 
 module.exports = router;

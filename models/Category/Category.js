@@ -6,25 +6,24 @@ const routeConfig = require(path.resolve('/sneakerbox', 'routes', 'config', 'rou
 const dbName = routeConfig.DB_NAME;
 
 class Category {
-    /**
-     * _id: ObjectId
-     * slug: String
-     * name: String
-     * desc: String
-     * parentId: ObjectId
-     * ancestors: [Object]
-     */
+     //_id: ObjectId
+     //slug: String
+     //name: String
+     //desc: String
+     //parentId: ObjectId
+     //ancestors: [Object]
 
 
     /**
      *
-     * @param {*} catetoryObj Object
+     * @param {*} categoryObj Object
      */
-    //Construct a new Category object using return value from DB query
-    constructor(catetoryObj){
-        let keys = keys(catetoryObj);
+    constructor(categoryObj){
+        let keys = Object.getOwnPropertyNames(categoryObj);
         keys.forEach((key)=>{
-            this[key] = catetoryObj[key];
+            if(key !== '_id'){
+                this[key] = categoryObj[key];
+            }
         });
     }
 
@@ -32,13 +31,18 @@ class Category {
      *
      * @param {String} categoryName
      * @param {MongoClient} client
-     * @return {Boolean |}
+     * @return {Object} result Object representing results of db query
      */
     static async findCategoryByName(categoryName, client){
         await connectorSrvc.connect(client);
         let db = client.db('sneakerbox-db');
-        let result = await connectorSrvc.findOne(db, 'categories', {name: categoryName});
-        return result;
+        try{
+            let result = await connectorSrvc.findOne(db, 'categories', {name: categoryName});
+            return result;
+        }
+        catch(e){
+            return({err: e.message});
+        }
     }
 }
 

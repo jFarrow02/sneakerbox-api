@@ -42,7 +42,9 @@ const close = async function (client){
  */
 const findOne = async function (db, collection, query){
     let result = await db.collection(collection).findOne(query);
-    //console.log('findOne:', result);  //OK
+    if(result === null){
+        throw new Error('No results found');
+    }
     return result;
 }
 

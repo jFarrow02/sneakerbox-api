@@ -1,7 +1,7 @@
 const path = require('path');
 const routeConfig = require(path.resolve('/sneakerbox', 'routes', 'config', 'routeConfig'));
 const dbName = routeConfig.DB_NAME;
-const collection = require(path.resolve('/sneakerbox', 'services', 'db', 'collections')).products;
+const collection = require(path.resolve('/sneakerbox', 'services', 'db', 'collections')).customers;
 
 class Customer{
     /***SCHEMA***/

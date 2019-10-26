@@ -19,6 +19,7 @@ const connectorSrvc = dbSrvc.dbConnectorService;
 const querySrvc = dbSrvc.dbQueryService;
 const bodyParser = require('body-parser');
 const checkAuthentication = require(path.resolve('/sneakerbox', 'middleware')).checkAuthentication;
+const inputValidatorSrvc = require(path.resolve('/sneakerbox', 'services', 'validators')).inputValidatorSrvc();
 
 router.connector = connectorSrvc;
 router.query = querySrvc;
@@ -70,7 +71,19 @@ router.put('/products/:slug/add-review', checkAuthentication, async(req, res)=>{
         username = req.get('CurrentUser'),
         title = req.body.title,
         slug = req.params.slug,
-        query = {reviewers: {$ne: reviewer}, slug: slug};
+        query = {slug: slug}, //FIND PRODUCT THAT MATCHES SLUG
+        toValidate = [username, reviewText, rating],
+        validators = [inputValidatorSrvc.isNull, inputValidatorSrvc.isWhitespace];
+
+    toValidate.forEach((value)=>{
+        //console.log(value);
+        // validators.forEach((validator)=>{
+        //     if(!validator(value)){
+        //         res.status(400).json({err: 'Bad request'});
+        //         return;
+        //     }
+        // });
+    });
 
     //Handle if slug not present
     if(!slug){
@@ -100,7 +113,7 @@ router.put('/products/:slug/add-review', checkAuthentication, async(req, res)=>{
     //     res.status(400).json(err);
     //     return;
     // }
-    console.log(reviewObj);
+    console.log('reviewObj:', reviewObj);
     res.status(203).json({msg: 'Review updated'})
 });
 

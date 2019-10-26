@@ -1,7 +1,5 @@
 const path = require('path');
 const DB = require(path.resolve('/sneakerbox', 'services', 'db', 'index'));
-const connectorSrvc = DB.dbConnectorService;
-const collection = DB.collections.customers;
 
 class Review{
 
@@ -17,6 +15,18 @@ class Review{
     // upvotes: Number,
     // downvotes: Number,
     // voterIds: [ObjectId],
+
+    constructor(reviewObj){
+        let keys = Object.getOwnPropertyNames(reviewObj);
+        keys.forEach((key)=>{
+            if(key !== '_id' && key!== 'date'){
+                this[key] = reviewObj[key];
+            }
+        });
+        this.date = new Date(Date.now());
+        this.upvotes = 0;
+        this.downvotes = 0;
+    }
 }
 
 module.exports = Review;

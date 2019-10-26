@@ -10,10 +10,10 @@ const nodeEnvConfig = {
 };
 const PORT = nodeEnvConfig[process.env.NODE_ENV];
 const cors = require('cors');
-const authRouter = require(path.resolve(__dirname, 'routes', 'auth', 'index.js'));
-const categoryRouter = require(path.resolve(__dirname, 'routes', 'categories', 'index.js'));
-const homeRouter = require(path.resolve(__dirname, 'routes', 'home', 'index.js'));
-const pagesRouter = require(path.resolve(__dirname, 'routes', 'pages', 'index.js'));
+const authRouter = require(path.resolve(__dirname, 'routes', 'auth'));
+const categoryRouter = require(path.resolve(__dirname, 'routes', 'categories'));
+const homeRouter = require(path.resolve(__dirname, 'routes', 'home'));
+const pagesRouter = require(path.resolve(__dirname, 'routes', 'pages'));
 const productsRouter = require(path.resolve(__dirname, 'routes', 'products'));
 
 //Mount routers & middleware

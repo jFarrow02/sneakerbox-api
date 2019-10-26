@@ -17,7 +17,7 @@ const findOne = async function (db, collection, query){
         throw new Error('No results found');
     }
     return result;
-}
+};
 
 /**
  * @param {Db} db Mongo {Db} object instance
@@ -31,9 +31,29 @@ const findAll = async function (db, collection){
         throw new Error('No results found');
     }
     return result.toArray();
-}
+};
+
+const findOneAndFilter = async function(db, collection, queryObj, filterObj){
+    let result = await db.collection(collection).findOne(queryObj, filterObj);
+    if(result === null){
+        throw new Error('No results found');
+    }
+    return result;
+};
+
+/**************UPDATE OPERATIONS******************/
+
+const updateOne = async function (db, collection, query, update){
+    let updated = await db.collection(collection).findOneAndUpdate(query, update);
+    if(result === null){
+        throw new Error('Unable to update document');
+    }
+    return updated;
+};
 
 module.exports = {
-    findOne     :   findOne,
-    findAll     :   findAll,
+    findOne             :   findOne,
+    findAll             :   findAll,
+    findOneAndFilter    :   findOneAndFilter,
+    updateOne           :   updateOne,
 }

@@ -51,7 +51,7 @@ router.get('/products/:slug', async (req, res)=>{
 //PUT a review on /products/:slug/add-review
 router.put('/products/:slug/add-review', checkAuthentication, async(req, res)=>{
     /**
-     * TODO: 2019-10-20 21:01 EST
+     * TODO: 2019-10-26 17:25 EST
      * COMPLETE LOGIC TO SAVE NEW REVIEW TO REVIEWS TABLE AND
      * UPDATE PRODUCT RECORD WITH NEW REVIEW INFORMATION
      */
@@ -72,22 +72,28 @@ router.put('/products/:slug/add-review', checkAuthentication, async(req, res)=>{
         title = req.body.title,
         slug = req.params.slug,
         query = {slug: slug}, //FIND PRODUCT THAT MATCHES SLUG
-        toValidate = [username, reviewText, rating],
-        validators = [inputValidatorSrvc.isNull, inputValidatorSrvc.isWhitespace];
+        toValidate =
+        [
+            {name: 'reviewText', value: reviewText},
+            {name: 'rating', value: rating},
+            {name: 'username', value: username},
+            {name: 'title', value: title},
+            {name: 'slug', value: slug},
+        ],
+        validators = [inputValidatorSrvc.isNullOrUndefined];
 
-    toValidate.forEach((value)=>{
-        //console.log(value);
-        // validators.forEach((validator)=>{
-        //     if(!validator(value)){
-        //         res.status(400).json({err: 'Bad request'});
-        //         return;
-        //     }
-        // });
+    let validationResults = toValidate.map((value)=>{
+        value = inputValidatorSrvc.createInputObj(value);
+        inputValidatorSrvc.runValidatorFunctions(validators, value);
+        return value;
     });
+
+    console.log('VALIDATION RESULTS:', validationResults); //OK
 
     //Handle if slug not present
     if(!slug){
-        res.status(400).json({err: ''})
+        res.status(400).json({err: ''});
+        return;
     }
     //Get product id and user id for save to new review object
     let userId = await Customer.getUserIdByUsername(username, client, router.connector, router.query);
@@ -113,7 +119,7 @@ router.put('/products/:slug/add-review', checkAuthentication, async(req, res)=>{
     //     res.status(400).json(err);
     //     return;
     // }
-    console.log('reviewObj:', reviewObj);
+    //console.log('reviewObj:', reviewObj); //OK
     res.status(203).json({msg: 'Review updated'})
 });
 

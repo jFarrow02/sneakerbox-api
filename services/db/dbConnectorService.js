@@ -10,6 +10,19 @@
  * @returns {Promise} connection Promise object representing eventual completion of db 'connect' operation
  */
 const connect = async function(client){
+    /**
+     * TODO: 2019-10-27 14:04 EST
+     * FIGURE OUT HOW TO PROPERLY HANDLE ERROR
+     * WHEN DB IS UNAVAILABLE TO CONNECT
+     */
+    // console.log('entering connect...');
+    // client.connect()
+    //     .then((connection)=>{
+    //         return connection;
+    //     })
+    //     .catch((err)=>{
+    //         return Promise.reject(err);
+    //     })
     let connection = await client.connect(); //client.connect() returns a Promise if no callback passed.
     return connection;
 }

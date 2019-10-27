@@ -35,7 +35,7 @@ const findAll = async function (db, collection){
 
 const findOneAndFilter = async function(db, collection, queryObj, filterObj){
     let result = await db.collection(collection).findOne(queryObj, {projection: filterObj});
-    console.log('result:', result);
+    //console.log('result:', result);
     if(result === null){
         throw new Error('No results found');
     }

@@ -80,7 +80,7 @@ router.put('/products/:slug/add-review', checkAuthentication, async(req, res)=>{
             {name: 'title', value: title},
             {name: 'slug', value: slug},
         ],
-        validators = [inputValidatorSrvc.isNullOrUndefined];
+        validators = [inputValidatorSrvc.isNullOrUndefined, inputValidatorSrvc.allWhiteSpace,];
 
     let validationResults = toValidate.map((value)=>{
         value = inputValidatorSrvc.createInputObj(value);

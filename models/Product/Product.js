@@ -47,15 +47,15 @@ class Product{
      */
     static async findAllProducts(client, connectorSrvc, querySrvc){
         await connectorSrvc.connect(client);
-        let db = client.db(dbName);
         try{
+            let db = client.db(dbName);
             let result = await querySrvc.findAll(db, collections.products);
             await connectorSrvc.close(client);
             return result;
         }
         catch(e){
-            await connectorSrvc.close(client);
-            return {err: e.message};
+            console.log('e:',e.message);
+            return e;
         }
     }
 

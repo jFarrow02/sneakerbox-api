@@ -9,24 +9,39 @@
  * @param {MongoClient} client
  * @returns {Promise} connection Promise object representing eventual completion of db 'connect' operation
  */
-const connect = async function(client){
-    /**
-     * TODO: 2019-10-27 14:04 EST
-     * FIGURE OUT HOW TO PROPERLY HANDLE ERROR
-     * WHEN DB IS UNAVAILABLE TO CONNECT
-     */
-    // console.log('entering connect...');
-    // client.connect()
-    //     .then((connection)=>{
-    //         return connection;
-    //     })
-    //     .catch((err)=>{
-    //         return Promise.reject(err);
-    //     })
-    let connection = await client.connect(); //client.connect() returns a Promise if no callback passed.
-    return connection;
-}
+// const connect = async function(client){
+//     /**
+//      * TODO: 2019-10-27 14:04 EST
+//      * FIGURE OUT HOW TO PROPERLY HANDLE ERROR
+//      * WHEN DB IS UNAVAILABLE TO CONNECT
+//      */
+//     let connection;
+//     try{
+//         connection = await client.connect(); //client.connect() returns a Promise if no callback passed.
+//         console.log('CONNECTION: ', connection);
+//         return connection;
+//     }
+//     catch(err){
+//         //connection = Promise.reject
+//         process.on('unhandledRejection', (reason, promise)=>{
+//             console.log('Unhandled Rejection at: ', reason.stack || reason);
+//             console.log('ERR:', err.message);
+//             return;
+//         })
+//     }
+//}
 
+const connect = function(client){
+    client.connect()
+        .then((connection)=>{
+            console.log('CONNECT:', connection);
+            return connection;
+        })
+        .catch((err)=>{
+            console.log("ERR:", err);
+            return new Error(err.message);
+        })
+}
 /**
  *
  * @param {MongoClient} client

@@ -1,6 +1,6 @@
 /**
  * @file /routers/apiserver/products_routes/router.js
- * @fileoverview This file defines the Express 'Router' object containing the product routes of the
+ * @fileoverview This file defines the Express {Router} object containing the product routes of the
  * API server.
  */
 

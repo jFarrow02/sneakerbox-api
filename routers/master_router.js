@@ -4,12 +4,12 @@
  */
 
 const path = require('path');
-const apiserver = require(path.resolve('/sneakerbox', 'routers', 'index')).apiserver;
-const appserver = require(path.resolve('/sneakerbox', 'routers', 'index')).appserver;
-const authserver = require(path.resolve('/sneakerbox', 'routers', 'index')).authserver;
+const apiserver = require(path.resolve('/sneakerbox', 'routers', 'apiserver'));
+//const appserver = require(path.resolve('/sneakerbox', 'routers', 'appserver'));
+//const authserver = require(path.resolve('/sneakerbox', 'routers', 'authserver'));
 
 module.exports = {
     apiserver   :   apiserver,
-    appserver   :   appserver,
-    authserver  :   authserver,
+    // appserver   :   appserver,
+    // authserver  :   authserver,
 };

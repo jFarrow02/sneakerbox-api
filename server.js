@@ -15,6 +15,7 @@ const categoryRouter = require(path.resolve(__dirname, 'routes', 'categories'));
 const homeRouter = require(path.resolve(__dirname, 'routes', 'home'));
 const pagesRouter = require(path.resolve(__dirname, 'routes', 'pages'));
 const productsRouter = require(path.resolve(__dirname, 'routes', 'products'));
+const apiserver = require(path.resolve(__dirname, 'routers', 'master_router')).apiserver;
 
 //Mount routers & middleware
 app.use(cors());
@@ -24,7 +25,10 @@ app.use(pagesRouter.acct);
 app.use(homeRouter.home);
 app.use(categoryRouter.categories);
 app.use(productsRouter);
+/*********************************/
+app.use('/api', apiserver);
 
+/*********************************/
 
 http.createServer(app).listen(PORT, ()=>{
     console.log(`App listening on port ${PORT}; env=${process.env.NODE_ENV}`);

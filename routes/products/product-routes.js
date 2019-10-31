@@ -25,15 +25,20 @@ router.connector = connectorSrvc;
 router.query = querySrvc;
 router.use(bodyParser.urlencoded({extended: true}));
 
+router.get('/products/test', async (req, res)=>{
+  let result = await connectorSrvc.connect(client, 'sneakerbox-db');
+  console.log(result);
+});
+
 //GET all /products
 router.get('/products', async (req, res)=>{
     let foundProducts = await Product.findAllProducts(client, router.connector, router.query);
-    // let data = foundProducts.map((product)=> new Product(product));
-    // if(!data || data.length < 1){
-    //     res.status(400).json({err: 'No products found'});
-    //     return;
-    // }
-    // res.status(200).json({data: data});
+    let data = foundProducts.map((product)=> new Product(product));
+    if(!data || data.length < 1){
+        res.status(400).json({err: 'No products found'});
+        return;
+    }
+    res.status(200).json({data: data});
     res.status(200).json({data: 'Troubleshooting'})
     return;
 });

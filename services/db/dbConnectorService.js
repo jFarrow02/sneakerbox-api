@@ -12,7 +12,6 @@
 const connect = async function (client, dbName){
     return client.connect()
         .then(()=>{
-            client.close();
             return client.db(dbName);
         })
         .catch((err)=>{

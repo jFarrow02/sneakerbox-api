@@ -26,8 +26,15 @@ router.query = querySrvc;
 router.use(bodyParser.urlencoded({extended: true}));
 
 router.get('/products/test', async (req, res)=>{
-  let result = await connectorSrvc.connect(client, 'sneakerbox-db');
-  console.log(result);
+//   let result = await connectorSrvc.connect(client, 'sneakerbox-db')
+//   console.log(result);
+    connectorSrvc.connect(client, 'sneakerbox-db')
+        .then((db)=>{
+            console.log(db);
+        })
+        .then(()=>{
+            client.close();
+        })
 });
 
 //GET all /products

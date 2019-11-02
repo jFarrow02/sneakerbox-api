@@ -8,8 +8,15 @@ const apiserver = require(path.resolve('/sneakerbox', 'routers', 'apiserver'));
 const appserver = require(path.resolve('/sneakerbox', 'routers', 'appserver'));
 //const authserver = require(path.resolve('/sneakerbox', 'routers', 'authserver'));
 
+const initRouter = (router, db, querySrvc)=>{
+    router.db = db;
+    router.querySrvc = querySrvc;
+    return router;
+};
+
 module.exports = {
-    apiserver   :   apiserver,
-    appserver   :   appserver,
+    apiserver       :   apiserver,
+    appserver       :   appserver,
     // authserver  :   authserver,
+    initRouter      :   initRouter,
 };

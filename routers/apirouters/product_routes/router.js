@@ -16,4 +16,5 @@ productRouter.get('/products', (req, res)=>{
    res.status(200).json({data: 'products route found OK'});
 });
 
+
 module.exports = productRouter;

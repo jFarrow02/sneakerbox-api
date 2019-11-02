@@ -33,9 +33,15 @@ const findAll = async function (db, collection){
     return result.toArray();
 };
 
+/**
+ * @param {Db} db
+ * @param {Collection} collection
+ * @param {Object} queryObj POJO describing the MongoDB query parameters for the desired result set
+ * @param {Object} filterObj POJO describing any filters to apply to the DB query
+ * @throws {Error} Throws error if query returns no results
+ */
 const findOneAndFilter = async function(db, collection, queryObj, filterObj){
     let result = await db.collection(collection).findOne(queryObj, {projection: filterObj});
-    //console.log('result:', result);
     if(result === null){
         throw new Error('No results found');
     }
@@ -44,6 +50,13 @@ const findOneAndFilter = async function(db, collection, queryObj, filterObj){
 
 /**************UPDATE OPERATIONS******************/
 
+/**
+ * @param {Db} db
+ * @param {Collection} collection
+ * @param {Object} query
+ * @param {Object} update
+ * @throws {Error} Throws error if query returns no results
+ */
 const updateOne = async function (db, collection, query, update){
     let updated = await db.collection(collection).findOneAndUpdate(query, update);
     if(result === null){

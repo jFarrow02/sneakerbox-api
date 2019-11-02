@@ -1,6 +1,9 @@
 /**
  * @fileOverview This file defines helper functions for creating and closing database connections.
- * It exports an object whose properties are the helper functions defined.
+ * It exports a FUNCTION that establishes a connection wth the MongoDB database,
+ * and returns an OBJECT with a single property, 'db'. This property
+ * represents a pool of database connections that can be re-used by all instances of
+ * the application's {Router} objects.
  */
 
 const MongoClient = require('mongodb').MongoClient;
@@ -16,6 +19,10 @@ const connect = (url)=>{
     return MongoClient.connect(url, {useNewUrlParser: true, useUnifiedTopology: true})
         .then((client)=>client.db(dbName))
         .catch((err)=>{
+            /**
+             * TODO: 2019-11-02 13:16EST
+             * NEED A BETTER SYSTEM FOR LOGGING ERRORS
+             */
             console.log(err.message);
         })
 }

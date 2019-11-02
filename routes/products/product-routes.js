@@ -13,23 +13,26 @@ const Customer = models.Customer;
 const bodyParser = require('body-parser');
 const checkAuthentication = require(path.resolve('/sneakerbox', 'middleware')).checkAuthentication;
 const inputValidatorSrvc = require(path.resolve('/sneakerbox', 'services', 'validators')).inputValidatorSrvc();
+const collectionName = require(path.resolve('/sneakerbox', 'services', 'db', 'collections')).products;
 
 router.use(bodyParser.urlencoded({extended: true}));
 
 router.get('/products/test', async (req, res)=>{
+    let query = {slug: 'test-sneaker-hi'},
+        filter = {};
     try{
-        //router.db.collection('products').find({});
-        res.status(200).json({msg: 'got a test product'})
+        let testProduct = await router.querySrvc.findOneAndFilter(router.db, collectionName, query, filter);
+        res.status(200).json({data: testProduct});
     }
     catch(e){
-        res.status(400).json({msg: 'bad request'});
-        console.log(e.message);
+        res.status(400).json({msg: e.message});
+        return;
     }
 });
 
 //Inject db and query service as DEPENDENCIES
-module.exports = (connectedDb, querySrvc)=>{
-    router.connectedDb = connectedDb;
+module.exports = (db, querySrvc)=>{
+    router.db = db.db;
     router.querySrvc = querySrvc;
     return router;
 }

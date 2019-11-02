@@ -25,8 +25,8 @@ const findOne = async function (db, collection, query){
  * @returns {Promise} Promise object representing completion of db query
  * @throws {Error} Throws error if query returns no results
  */
-const findAll = async function (db, collection){
-    let result = await db.collection(collection).find();
+const findAll = async function (db, collection, queryObj, filterObj){
+    let result = await db.collection(collection).find(queryObj, filterObj);
     if(result === null){
         throw new Error('No results found');
     }

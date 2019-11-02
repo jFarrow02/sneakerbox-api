@@ -17,7 +17,10 @@ const pagesRouter = require(path.resolve(__dirname, 'routes', 'pages'));
 const productsRouter = require(path.resolve(__dirname, 'routes', 'products'));
 const apiserver = require(path.resolve(__dirname, 'routers', 'master_router')).apiserver;
 const appserver = require(path.resolve(__dirname, 'routers', 'master_router')).appserver;
+const initializeDB = require(path.resolve(__dirname, 'services', 'db')).dbConnectorService;
+const querySrvc = require(path.resolve(__dirname, 'services', 'db')).dbQueryService;
 
+const db = initializeDB();
 //Mount routers & middleware
 app.use(cors());
 app.use(authRouter.login);
@@ -25,15 +28,22 @@ app.use(authRouter.signup);
 app.use(pagesRouter.acct);
 app.use(homeRouter.home);
 app.use(categoryRouter.categories);
-app.use(productsRouter);
 /*********************************/
 app.use('/api', apiserver);
 app.use('/app', appserver);
 /*********************************/
 
-http.createServer(app).listen(PORT, ()=>{
-    console.log(`App listening on port ${PORT}; env=${process.env.NODE_ENV}`);
-});
-
-//Export app for testing purposes
-module.exports = app;
+initializeDB()
+    .then((db)=>{
+        app.use(productsRouter(db, querySrvc)); //Attach db connection to Router and then 'use' in server
+        http.createServer(app).listen(PORT, ()=>{
+            console.log(`App listening on port ${PORT}; env=${process.env.NODE_ENV}`);
+        });
+    })
+    .catch((err)=>{
+        console.log(err.message);
+    })
+    .finally(()=>{
+        //Export app for testing purposes
+        module.exports = app;
+    })

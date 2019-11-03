@@ -1,7 +1,8 @@
 /**
  * @file /routers/apiserver/products_routes/router.js
- * @fileoverview This file defines the Express {Router} object containing the product routes of the
- * API server.
+ * @fileoverview This file defines the Express {Router} object containing the GET routes of the
+ * API server for records in the 'products' collection. It exports the {Router} object on
+ * module.exports.
  */
 const express = require('express');
 const router = express.Router();
@@ -10,7 +11,6 @@ const models = require(path.resolve('/sneakerbox', 'models'));
 const Product = models.Product;
 const Review = models.Review;
 const bodyParser = require('body-parser');
-const inputValidatorSrvc = require(path.resolve('/sneakerbox', 'services', 'validators')).inputValidatorSrvc();
 const collections = require(path.resolve('/sneakerbox', 'services', 'db', 'collections'));
 const productsCollection = collections.products;
 const categoriesCollection = collections.categories;
@@ -53,7 +53,6 @@ router.get('/products/:slug', async(req, res)=>{
  */
 router.get('/products/by_category/:category_slug', async(req, res)=>{
    try{
-      console.log('/products/by_category/:category_slug');
       let catQuery = {slug: req.params.category_slug};
       let catId = await router.querySrvc.findOneAndFilter(router.db, categoriesCollection, catQuery, {'_id': 1});
       let prodQuery = {primaryCategory: catId};
@@ -71,7 +70,6 @@ router.get('/products/by_category/:category_slug', async(req, res)=>{
  */
 router.get('/products/:slug/reviews', async(req, res)=>{
    try{
-      console.log('/products/:slug/reviews');
       let query = {slug: req.params.slug},
          filter = {'_id': 1};
       let productId = await router.querySrvc.findOneAndFilter(router.db, collections.products, query, filter);
@@ -88,7 +86,19 @@ router.get('/products/:slug/reviews', async(req, res)=>{
  * GET /products/:avg_rating -->Read all products with avgRating >= ':avg_rating'
  */
 router.get('/products/by_rating/:avg_rating', async(req, res)=>{
-
+   try{
+      let avgRating = Number.parseFloat(req.params.avg_rating),
+      query = {avgReview: avgRating};
+      if(Number.isNaN(avgRating)){
+         throw new Error('Invalid query params');
+      }
+      let productsByRating = await router.querySrvc.findAll(router.db, collections.products, query, null);
+      productsByRating = productsByRating.map((product)=>new Product(product));
+      res.status(200).json({data: productsByRating});
+   }
+   catch(e){
+      res.status(400).json({err: e.message})
+   }
 });
 
 /**
@@ -111,7 +121,6 @@ router.get('/sale', async(req, res)=>{
  */
 router.get('/sale/:category', async(req, res)=>{
    try{
-      console.log('/sale/:category');
       let query = {onSale: true, mainCategory: req.params.category};
       let saleProducts = await router.querySrvc.findAll(router.db, collections.products, query, null);
       saleProducts = saleProducts.map((saleProduct)=>new Product(saleProduct));
@@ -123,13 +132,29 @@ router.get('/sale/:category', async(req, res)=>{
 });
 
 /**
- * GET /products/price/<num>/<num>
+ * GET /products/price/<num>/<num>  -->Read all products where regular price (or sale price if on sale) is
+ * LESS than param 0 and GREATER THAN param 1
  */
 router.get(/^\/products\/price\/([0-5])\/([0-5])$/, async(req, res)=>{
    try{
-      let hi = req.params['0'],
-      lo = req.params['1'];
-      res.status(200).json({msg: 'Found route ok'});
+      let lo = req.params['1'],
+      hi = req.params['0'];
+
+      if(hi >= lo){
+         //Query db for products where regular OR sale price (if on sale) is <= hi && >= lo
+         let query = {$or:
+            [
+               {'priceHistory.reg': {$lte: hi, $gte: lo}},
+               {'onSale': true, 'priceHistory.sale': {$lte: hi, $gte: lo}},
+            ]
+         };
+         let productsByRange = await router.querySrvc.findAll(router.db, collections.products, query);
+         productsByRange = productsByRange.map((product)=>new Product(product));
+         res.status(200).json({data: productsByRange});
+      }
+      else{
+         throw new Error('Invalid query params');
+      }
    }
    catch(e){
       res.status(400).json({err: e.message});

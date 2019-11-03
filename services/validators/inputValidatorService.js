@@ -46,9 +46,9 @@ const allWhiteSpace = (inputObj)=>{
  */
 const isNotANumber = (inputObj)=>!isNaN(inputObj.value);
 
-const isLessThanMax = (inputObj)=>inputObj.value > inputObj.max;
+const isLessThanMax = (inputObj, max)=>inputObj.value > max;
 
-const isGreaterThanMin = (inputObj)=>inputObj.value < inputObj.min;
+const isGreaterThanMin = (inputObj, min)=>inputObj.value < min;
 
 /**
  *

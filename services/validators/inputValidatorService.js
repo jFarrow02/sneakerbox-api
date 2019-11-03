@@ -11,7 +11,7 @@
 
 /**
  * @param {Object} input Object representing user input, e.g. from a form field. The function expects the
- * object to have the following properties: name{String} and value{String}
+ * object to have the following properties: name{String} and value{String | Number | Boolean}
  * @returns {Object} inputObj
  */
 
@@ -42,6 +42,16 @@ const allWhiteSpace = (inputObj)=>{
 
 /**
  *
+ * @param {Object} inputObj
+ */
+const isNotANumber = (inputObj)=>!isNaN(inputObj.value);
+
+const isLessThanMax = (inputObj)=>inputObj.value > inputObj.max;
+
+const isGreaterThanMin = (inputObj)=>inputObj.value < inputObj.min;
+
+/**
+ *
  * @param {[Function]} validatorsArray
  * @param {Object} inputObj
  * This helper function accepts an array of validator functions, and an Object representing
@@ -66,6 +76,9 @@ module.exports = function(){
         {
             allWhiteSpace           :   allWhiteSpace,
             createInputObj          :   createInputObj,
+            isGreaterThanMin        :   isGreaterThanMin,
+            isLessThanMax           :   isLessThanMax,
+            isNotANumber            :   isNotANumber,
             isNullOrUndefined       :   isNullOrUndefined,
             runValidatorFunctions   :   runValidatorFunctions,
         }

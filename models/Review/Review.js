@@ -23,9 +23,9 @@ class Review{
                 this[key] = reviewObj[key];
             }
         });
-        this.date = new Date(Date.now());
-        this.upvotes = 0;
-        this.downvotes = 0;
+        // this.date = new Date(Date.now());
+        // this.upvotes = 0;
+        // this.downvotes = 0;
     }
 }
 

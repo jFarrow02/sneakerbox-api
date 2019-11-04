@@ -19,3 +19,16 @@ Sneakerbox-API is organized according to the following structure:
     - **services**: *Directory* Contains custom service files.
     - **tests**: *Coming Soon*
     - **server**.js: Application entry point. Creates server and initializes and attaches all top-level router objects to server.
+
+### Running the Application
+1. To start the server in **_dev_** mode **(Windows)**:
+```npm run dev```
+
+2. To start the server in **_prod_** mode **(Windows)**:
+```npm run prod```
+
+3. To start the server in **_dev_** mode **(Mac)**:
+```npm run dev-mac```
+
+4. To start the server in **_prod_** mode **(Mac)**:
+```npm run prod-mac```

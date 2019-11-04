@@ -1,8 +1,8 @@
-/**@fileoverview */
-//This file defines a 'Category' model class that represents a record in the 'categories' database collection.
-//It also defines helper methods on the model for querying database records and/or
-//transforming results.
-
+/**
+*@fileoverview This file defines a 'Category' model class that represents a record in the 'categories' database collection.
+*It also defines helper methods on the model for querying database records and/or
+*transforming results.
+*/
 const path = require('path');
 const dbSrvc = require(path.resolve('/sneakerbox', 'services', 'db', 'index.js'));
 const collections = dbSrvc.collections;
@@ -17,7 +17,6 @@ class Category {
      //desc: String
      //parentId: ObjectId
      //ancestors: [Object]
-
 
     /**
      *

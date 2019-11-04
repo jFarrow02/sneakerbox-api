@@ -1,7 +1,7 @@
 const path = require('path');
-const DB = require(path.resolve('/sneakerbox', 'services', 'db', 'index'));
-const connectorSrvc = DB.dbConnectorService;
-const collection = DB.collections.customers;
+const routeConfig = require(path.resolve('/sneakerbox', 'routes', 'config', 'routeConfig'));
+const dbName = routeConfig.DB_NAME;
+const collection = require(path.resolve('/sneakerbox', 'services', 'db', 'collections')).customers;
 
 class Customer{
     /***SCHEMA***/
@@ -13,6 +13,24 @@ class Customer{
     // hashedPassword: String,
     // adresses: [Object],
     // paymentMethods: [Object],
+
+    /**
+     *
+     * @param {String} username
+     */
+    static async getUserIdByUsername(username, client, connectorSrvc, querySrvc){
+        await connectorSrvc.connect(client);
+        let db = client.db(dbName);
+        try{
+            let result = await querySrvc.findOneAndFilter(db, collection, {username: username}, {_id: 1});
+            await connectorSrvc.close(client);
+            return result;
+        }
+        catch(e){
+            await connectorSrvc.close(client);
+            return {err: e.message};
+        }
+    }
 }
 
 module.exports = Customer;

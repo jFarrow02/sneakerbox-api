@@ -7,8 +7,6 @@
 
 const path = require('path');
 const dbSrvc = require(path.resolve('/sneakerbox', 'services', 'db', 'index.js'));
-const connectorSrvc = dbSrvc.dbConnectorService;
-const querySrvc = dbSrvc.dbQueryService;
 const collections = dbSrvc.collections;
 const routeConfig = require(path.resolve('/sneakerbox', 'routes', 'config', 'routeConfig.js'));
 const dbName = routeConfig.DB_NAME;
@@ -22,6 +20,8 @@ class Product{
     // desc: String,
     // totalReviews: Number,
     // avgReview: Number,
+    // reviewers: [String],
+    // reviews: [ObjectId]
     // pricing: Object,
     // priceHistory: Object,
     // primaryCategory: ObjectId,
@@ -39,6 +39,7 @@ class Product{
         })
     }
 
+    /********************READ METHODS**********************/
     /**
      * @param {MongoClient} client
      * @param {Object} connectorSrvc
@@ -46,15 +47,15 @@ class Product{
      */
     static async findAllProducts(client, connectorSrvc, querySrvc){
         await connectorSrvc.connect(client);
-        let db = client.db(dbName);
         try{
+            let db = client.db(dbName);
             let result = await querySrvc.findAll(db, collections.products);
             await connectorSrvc.close(client);
             return result;
         }
         catch(e){
-            await connectorSrvc.close(client);
-            return {err: e.message};
+            console.log('e:',e.message);
+            return e;
         }
     }
 
@@ -75,7 +76,45 @@ class Product{
         }
         catch(e){
             await connectorSrvc.close(client);
-            return {err: e.message}
+            return {err: e.message};
+        }
+    }
+
+    static async getProductIdBySlug(slug, client, connectorSrvc, querySrvc){
+        await connectorSrvc.connect(client);
+        let db = client.db(dbName);
+        try{
+            let result = await querySrvc.findOneAndFilter(db, collections.products, {slug: slug}, {_id: 1});
+            await connectorSrvc.close(client);
+            return result;
+        }
+        catch(e){
+            return {err: e.message};
+        }
+    }
+    /********************UPDATE METHODS**********************/
+
+    /**
+     *
+     * @param {MongoClient} client
+     * @param {Object} connectorSrvc
+     * @param {Object} querySrvc
+     * @param {Object} query
+     * @param {Object} review
+     * @returns {Object}
+     * @throws {Error}
+     */
+    static async addProductReview(client, connectorSrvc, querySrvc, query, review){
+        await connectorSrvc.connect(client);
+        let db = client.db(dbName);
+        try{
+            querySrvc.updateOne(db, collection.products, query, review);
+            await connectorSrvc.close(client);
+            return {updateSuccess: true};
+        }
+        catch(e){
+            await connectorSrvc.close(client);
+            return {err: e.message};
         }
     }
 }

@@ -1,40 +1,43 @@
 /**
  * @fileOverview This file defines helper functions for creating and closing database connections.
- * It exports an object whose properties are the helper functions defined.
+ * It exports a FUNCTION that establishes a connection wth the MongoDB database,
+ * and returns an OBJECT with a single property, 'db'. This property
+ * represents a pool of database connections that can be re-used by all instances of
+ * the application's {Router} objects.
  */
 
+const MongoClient = require('mongodb').MongoClient;
+const path = require('path');
+const DB_URL = require(path.resolve('/sneakerbox', 'routes', 'config', 'routeConfig')).CONNECTION_URL;
+const dbName = process.env.DB_NAME;
 
 /**
- *
- * @param {MongoClient} client
- * @returns {Promise} connection Promise object representing eventual completion of db 'connect' operation
+ * @param {String} url URL of MongoDB instance to which to connect
+ * @returns {Promise} Promise object representing completion of database connection operation
  */
-const connect = async function(client){
-    let connection = await client.connect(); //client.connect() returns a Promise if no callback passed.
-    return connection;
+const connect = (url)=>{
+    return MongoClient.connect(url, {useNewUrlParser: true, useUnifiedTopology: true})
+        .then((client)=>client.db(dbName))
+        .catch((err)=>{
+            /**
+             * TODO: 2019-11-02 13:16EST
+             * NEED A BETTER SYSTEM FOR LOGGING ERRORS
+             */
+            console.log(err.message);
+        })
 }
 
 /**
+ * Connects asynchronously to the MongoDB instance via the {MongoClient} object.
+ * Creates and returns an object with a property 'db' of the {Db} class,
+ * representing the connected database.
  *
- * @param {MongoClient} client
- * @returns {Promise} closed Promise object representing eventual completion of db 'close' operation
+ * @returns {Object} Object with 'db' property representing database connection
  */
-const close = async function (client){
-    let closed;
-    if(client){
-        closed = await client.close();
-    }
-    else{
-        closed = new Promise((resolve, reject)=>{
-            reject(new Error('Error closing db'));
-        });
-    }
-    return closed;
-}
+const dbConnectorService = async()=>{
+    let db = await connect(DB_URL);
 
-const dbConnectorService = {
-    close       :       close,
-    connect     :       connect,
+    return { db  :   db };
 };
 
 module.exports = dbConnectorService;

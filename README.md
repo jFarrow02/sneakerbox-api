@@ -10,10 +10,10 @@ Sneakerbox-API is a **[NodeJS](https://nodejs.org/en/about/)**/**[ExpressJS](htt
 ### Application Structure
 Sneakerbox-API is organized according to the following structure:
 + **root**
-    - middleware
-    - models
-    - routers
-    - scripts
-    - services
-    - tests
-    - server.js
+    - middleware: __Directory__ Contains custom middleware functions.
+    - models: __Directory__ Contains ES6 Class files modeling database entities.
+    - routers: __Directory__ Contains files defining Express {Rotuer} objects and route handler functions.
+    - scripts: __Directory__ Contains database creation script files.
+    - services: __Directory__ Contains custom service files.
+    - tests: __Coming Soon__
+    - server.js: Application entry point. Creates server and initializes and attaches all top-level router objects to server.

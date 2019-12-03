@@ -39,10 +39,16 @@ router.post('/login', (req, res)=>{
                         payload = {username: req.body.username};
                         jwt.sign(payload, secret, header, ((err, token)=>{
                             if(err){
-                                res.status(500).json({err: 'Authentication failed'});
+                                // res.status(500).json({err: 'Authentication failed'});
+                                res.status(500).json({err: err.message});
                                 return;
                             }
                             //Issue JWT
+                            /**
+                             * TODO: 2019-11-10 10:31 EST
+                             * CONSIDER REFACTORING TO RETURN THE TOKEN IN THE
+                             * RESPONSE HEADERS
+                             */
                             res.status(202).json({token: token, currentUser: req.body.username});
                             return;
                         }));

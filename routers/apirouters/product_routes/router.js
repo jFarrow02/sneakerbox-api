@@ -54,9 +54,9 @@ router.get('/products/:slug', async(req, res)=>{
 router.get('/products/by_category/:category_slug', async(req, res)=>{
    try{
       let catQuery = {slug: req.params.category_slug};
-      let catId = await router.querySrvc.findOneAndFilter(router.db, categoriesCollection, catQuery, {'_id': 1});
-      let prodQuery = {primaryCategory: catId};
-      let products = await router.querySrvc.findAndFilter(router.db, categoriesCollection, prodQuery, null);
+      let category = await router.querySrvc.findOneAndFilter(router.db, categoriesCollection, catQuery, {'_id': 1});
+      let prodQuery = {categories: category["_id"]};
+      let products = await router.querySrvc.findAll(router.db, productsCollection, prodQuery, null);
       products = products.map((product)=>new Product(product));
       res.status(200).json({data: products});
    }

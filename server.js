@@ -4,12 +4,14 @@ const path = require('path');
 let server = express();
 const api = express.Router();
 const app = express.Router();
-const config = require('dotenv').config();
+const auth = require(path.resolve(__dirname, 'routes', 'auth'));
+// const config = require('dotenv').config();
 const nodeEnvConfig = {
     'dev': 9000,
     'prod': 8000,
     'test': 3000,
 };
+
 const PORT = nodeEnvConfig[process.env.NODE_ENV];
 const cors = require('cors');
 const initializeDB = require(path.resolve('/sneakerbox', 'services', 'db')).dbConnectorService;
@@ -35,7 +37,7 @@ initializeDB()
         initRouters(appRouters, db, querySrvc, app);
         server.use('/api', api);
         server.use('/app', app);
-
+        server.use('/', auth.login);
         http.createServer(server).listen(PORT, ()=>{
             console.log(`Server listening on port ${PORT}; env=${process.env.NODE_ENV}`);
         });

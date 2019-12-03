@@ -18,7 +18,7 @@ Sneakerbox-API is organized according to the following structure:
     - **scripts**: *Directory* Contains database creation script files.
     - **services**: *Directory* Contains custom service files.
     - **tests**: *Coming Soon*
-    - **server**.js: Application entry point. Creates server and initializes and attaches all top-level router objects to server.
+    - **server.js**: Application entry point. Creates server and initializes and attaches all top-level router objects to server.
 
 ### Running the Application
 1. To start the server in **_dev_** mode **(Windows)**:

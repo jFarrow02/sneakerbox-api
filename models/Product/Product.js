@@ -20,15 +20,15 @@ class Product{
     // desc: String,
     // totalReviews: Number,
     // avgReview: Number,
-    // reviewers: [String],
-    // reviews: [ObjectId]
     // pricing: Object,
     // priceHistory: Object,
     // primaryCategory: ObjectId,
     // categories:[ObjectId],
     // tags: [String],
     // details: Object,
-    // onSale: Boolean
+    // onSale: Boolean,
+    //imageFiles: [{String}],
+    // sizes: [{Number}],
 
     constructor(productObj){
         let keys = Object.getOwnPropertyNames(productObj);
